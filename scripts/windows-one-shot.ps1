@@ -49,9 +49,32 @@ function Prepare-AndroidEnv {
 
 function Ensure-SdkManager {
   if (Get-Command sdkmanager -ErrorAction SilentlyContinue) { return }
-  Write-Err 'Android SDK command-line tools not found. Install them first (PowerShell): winget install Google.AndroidSDK.CommandlineTools'
-  Write-Err 'After install, set ANDROID_SDK_ROOT/ANDROID_HOME and re-run this script.'
-  exit 1
+  Write-Info 'Android SDK command-line tools not found; attempting winget install...'
+  try {
+    winget install --id Google.AndroidSDK.CommandlineTools --exact --source winget --accept-source-agreements --accept-package-agreements
+  } catch {
+    Write-Err 'Failed to install command-line tools via winget. Install manually then re-run: winget install Google.AndroidSDK.CommandlineTools'
+    exit 1
+  }
+
+  Prepare-AndroidEnv
+  if (-not (Get-Command sdkmanager -ErrorAction SilentlyContinue)) {
+    Write-Err 'sdkmanager still not found after winget install. Ensure ANDROID_SDK_ROOT/ANDROID_HOME are set to your SDK folder.'
+    exit 1
+  }
+}
+
+function Accept-Licenses {
+  Write-Info 'Accepting Android SDK licenses...'
+  $cmd = "echo y | sdkmanager --sdk_root `\"$($env:ANDROID_SDK_ROOT)`\" --licenses"
+  cmd.exe /c $cmd | ForEach-Object { Write-Host $_ }
+}
+
+function Ensure-SdkPackages {
+  $packages = @('platform-tools', 'platforms;android-34', 'build-tools;34.0.0')
+  Write-Info "Ensuring SDK packages: $($packages -join ', ')"
+  $cmd = "echo y | sdkmanager --sdk_root `\"$($env:ANDROID_SDK_ROOT)`\" --install " + ($packages | ForEach-Object { '"' + $_ + '"' } -join ' ')
+  cmd.exe /c $cmd | ForEach-Object { Write-Host $_ }
 }
 
 function Sync-Assets {
@@ -94,6 +117,8 @@ function Collect-Artifact {
 Ensure-Java
 Prepare-AndroidEnv
 Ensure-SdkManager
+Accept-Licenses
+Ensure-SdkPackages
 Sync-Assets
 Ensure-Wrapper
 Build-Apk
