@@ -17,6 +17,19 @@ WRAPPER_JAR="$ANDROID_DIR/gradle/wrapper/gradle-wrapper.jar"
 
 log() { printf "[build-apk] %s\n" "$*"; }
 
+check_env() {
+  if ! command -v java >/dev/null 2>&1; then
+    log "Java is missing. Install JDK 17+ (e.g., brew install openjdk@17) and retry."
+    exit 1
+  fi
+
+  if [[ -z "${ANDROID_HOME:-}" && -z "${ANDROID_SDK_ROOT:-}" ]]; then
+    log "ANDROID_HOME / ANDROID_SDK_ROOT not set. Set them to your Android SDK path (no Android Studio required)."
+    log "Example on macOS: export ANDROID_HOME=$HOME/Library/Android/sdk"
+    exit 1
+  fi
+}
+
 action_sync_assets() {
   log "Syncing HTML bundle into Android assets..."
   mkdir -p "$ASSETS_DIR"
@@ -53,6 +66,7 @@ action_collect_artifact() {
   fi
 }
 
+check_env
 action_sync_assets
 action_ensure_wrapper
 action_build_apk
