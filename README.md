@@ -55,7 +55,7 @@ The maze feels endless, but if you reach Stage 8 and find the secret exit, the r
 
 1. Clone the repo:
    ```bash
-   git clone https://github.com/<your-username>/infinite-mind-maze.git
+   git clone https://github.com/Jotnunni/infinite-mind-maze.git
    cd infinite-mind-maze
    ```
 2. Serve the static files. Any simple HTTP server works; for example with Python:
