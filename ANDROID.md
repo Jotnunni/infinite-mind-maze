@@ -50,6 +50,22 @@ If the script reports a missing Gradle wrapper and you have `gradle` installed, 
 ```
 Then re-run the build script.
 
+## Intel macOS one-shot script (setup + build)
+If you have an older Intel MacBook without Android Studio, run this end-to-end helper from the repo root:
+
+```bash
+chmod +x scripts/mac-intel-one-shot.sh
+./scripts/mac-intel-one-shot.sh
+```
+
+What it does:
+- Verifies you are on Intel macOS and installs OpenJDK 17 via Homebrew if Java is missing.
+- Exports the Android SDK environment variables for the current run.
+- Calls `scripts/install-android-cli-macos.sh` to download the Android CLI + SDK packages.
+- Calls `scripts/build-android-apk.sh` to produce `dist/app-debug.apk`.
+
+Prereqs: Homebrew installed (`brew.sh`) and enough disk space for the SDK packages. If you already have Java and the SDK set up, the script will skip redundant installs.
+
 ## Installing the APK (optional)
 After the build finishes, install the APK on a connected device or emulator:
 
