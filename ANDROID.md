@@ -4,6 +4,11 @@ Use the helper script to produce a debug APK that bundles the existing `index.ht
 
 > Note: This repo intentionally does not ship a prebuilt APK. Build it locally so it is signed with your environment's SDK tools. The helper script writes the result to `dist/app-debug.apk`.
 
+### Why the APK isn't prebuilt here
+- APKs must be built and signed with SDK tools on a specific machine; shipping a prebuilt binary would either be unsigned or signed with a key you don't control, which is unsafe to install.
+- The helper script guarantees the APK you install comes from your own environment (and key), avoids supply-chain risk, and keeps the repo free of large binary artifacts.
+- If you need to share an APK, build it once with `./scripts/build-android-apk.sh`, then distribute the resulting `dist/app-debug.apk` that you produced locally.
+
 ## Quick bootstrap (Intel/Apple Silicon macOS, no Android Studio)
 Run the helper script once to install the Android command-line tools + required SDK packages under `~/Library/Android/sdk`:
 
