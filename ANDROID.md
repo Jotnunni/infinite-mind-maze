@@ -2,6 +2,8 @@
 
 Use the helper script to produce a debug APK that bundles the existing `index.html` inside a WebView wrapper.
 
+> Note: This repo intentionally does not ship a prebuilt APK. Build it locally so it is signed with your environment's SDK tools. The helper script writes the result to `dist/app-debug.apk`.
+
 ## Quick bootstrap (Intel/Apple Silicon macOS, no Android Studio)
 Run the helper script once to install the Android command-line tools + required SDK packages under `~/Library/Android/sdk`:
 
