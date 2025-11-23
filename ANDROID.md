@@ -27,6 +27,12 @@ From the repository root after the prerequisites:
 ./scripts/build-android-apk.sh
 ```
 
+Quick notes on running the script:
+
+- Make sure it is executable once (if needed): `chmod +x scripts/build-android-apk.sh`.
+- Run it from the repo root so it can find `index.html` and the Android project.
+- It will fail fast if Java or the Android SDK env vars (`ANDROID_HOME`/`ANDROID_SDK_ROOT`) are missing; set them first as shown above.
+
 What the script does:
 1. Copies `index.html` into `android/app/src/main/assets/`.
 2. Ensures the Gradle wrapper exists (regenerates via system `gradle` if needed).
