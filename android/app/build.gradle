@@ -19,6 +19,22 @@ android {
         buildConfig = true
     }
 
+    def releaseKeystorePath = System.getenv("IMZ_KEYSTORE_PATH")
+    def releaseKeystorePassword = System.getenv("IMZ_KEYSTORE_PASSWORD")
+    def releaseKeyAlias = System.getenv("IMZ_KEY_ALIAS")
+    def releaseKeyPassword = System.getenv("IMZ_KEY_PASSWORD") ?: releaseKeystorePassword
+
+    signingConfigs {
+        if (releaseKeystorePath && releaseKeystorePassword && releaseKeyAlias && releaseKeyPassword) {
+            create("release") {
+                storeFile = file(releaseKeystorePath)
+                storePassword = releaseKeystorePassword
+                keyAlias = releaseKeyAlias
+                keyPassword = releaseKeyPassword
+            }
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -29,6 +45,18 @@ android {
 
     packaging {
         resources.excludes += setOf("META-INF/DEPENDENCIES", "META-INF/INDEX.LIST")
+    }
+
+    buildTypes {
+        debug {
+            // Default debug signing config provided by the Android Gradle Plugin.
+        }
+        release {
+            minifyEnabled = false
+            shrinkResources = false
+            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
+            isDebuggable = false
+        }
     }
 }
 

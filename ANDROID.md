@@ -58,3 +58,26 @@ adb install -r dist/app-debug.apk
 ```
 
 If you only want to grab the APK (e.g., to share), it lives at `dist/app-debug.apk`.
+
+## Creating a signed release APK
+Use your own keystore to create a distributable release build. Generate one if you do not already have it:
+
+```bash
+mkdir -p ~/.keystores
+keytool -genkeypair -v -keystore ~/.keystores/imm-release.keystore \
+  -alias immRelease -keyalg RSA -keysize 2048 -validity 36500
+```
+
+Then export the keystore details and run the release helper from the repo root:
+
+```bash
+export IMZ_KEYSTORE_PATH=$HOME/.keystores/imm-release.keystore
+export IMZ_KEY_ALIAS=immRelease
+export IMZ_KEYSTORE_PASSWORD=YOUR_PASSWORD
+# Optional if it differs from the keystore password:
+export IMZ_KEY_PASSWORD=YOUR_KEY_PASSWORD
+
+./scripts/build-android-release-apk.sh
+```
+
+The script will fail fast if the keystore inputs are missing or the file cannot be found. On success it writes the signed artifact to `dist/app-release.apk`.
