@@ -66,6 +66,21 @@ What it does:
 
 Prereqs: Homebrew installed (`brew.sh`) and enough disk space for the SDK packages. If you already have Java and the SDK set up, the script will skip redundant installs.
 
+## Windows 11 PowerShell helper (setup + build)
+For Windows 10/11, run the PowerShell one-shot helper from the repo root. It assumes you will use Winget to install missing tools.
+
+```powershell
+pwsh -ExecutionPolicy Bypass -File scripts/windows-one-shot.ps1
+```
+
+What it does:
+- Verifies Java is available (expects JDK 17+; installs via `winget install EclipseAdoptium.Temurin.17.JDK` if you prefer).
+- Points `ANDROID_HOME` / `ANDROID_SDK_ROOT` at `%LOCALAPPDATA%\Android\Sdk` by default.
+- Verifies `sdkmanager` is available (installs via `winget install Google.AndroidSDK.CommandlineTools` if you prefer).
+- Syncs `index.html` into Android assets, regenerates the Gradle wrapper jar via system `gradle` if it is missing, runs `gradlew.bat assembleDebug`, and copies the APK to `dist/app-debug.apk`.
+
+Prereqs: Windows PowerShell (or pwsh), Winget available, and either a preinstalled Android SDK or willingness to install the CLI tools via Winget. If you already have Java/SDK configured, the helper skips redundant installs.
+
 ## Installing the APK (optional)
 After the build finishes, install the APK on a connected device or emulator:
 
