@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+JAVA_OPTS=${JAVA_OPTS:-""}
+GRADLE_WRAPPER_JAR="$DIR/gradle/wrapper/gradle-wrapper.jar"
+
+if [ ! -f "$GRADLE_WRAPPER_JAR" ]; then
+  echo "Gradle wrapper jar missing. Please run 'gradle wrapper' in the android folder." >&2
+  exit 1
+fi
+
+exec sh "$DIR/gradle/wrapper/gradle-wrapper" "$@"
