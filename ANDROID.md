@@ -2,23 +2,21 @@
 
 Use the helper script to produce a debug APK that bundles the existing `index.html` inside a WebView wrapper.
 
-## Prerequisites (Intel macOS without Android Studio)
-1) Install Java 17+: `brew install openjdk@17` (or any JDK 17+).
-2) Install the Android command-line tools only:
-   - Download the macOS ZIP from <https://developer.android.com/studio#command-line-tools-only>.
-   - Unzip and place `cmdline-tools` under `~/Library/Android/sdk/` so you end up with `~/Library/Android/sdk/cmdline-tools/latest`.
-3) Export environment variables (add to your shell profile):
-   ```bash
-   export ANDROID_HOME="$HOME/Library/Android/sdk"
-   export ANDROID_SDK_ROOT="$ANDROID_HOME"
-   export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"
-   export JAVA_HOME="$(/usr/libexec/java_home -v 17)"
-   ```
-4) Install the needed platforms/build-tools with `sdkmanager` (run from any shell):
-   ```bash
-   sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
-   ```
-5) Optional: `brew install android-platform-tools` if you want `adb` for installing the APK on a device/emulator.
+## Quick bootstrap (Intel/Apple Silicon macOS, no Android Studio)
+Run the helper script once to install the Android command-line tools + required SDK packages under `~/Library/Android/sdk`:
+
+```bash
+chmod +x scripts/install-android-cli-macos.sh
+./scripts/install-android-cli-macos.sh
+```
+
+What it does:
+- Verifies Java is available (install JDK 17+ first via `brew install openjdk@17` if needed).
+- Downloads the official Android command-line tools ZIP, places it under `~/Library/Android/sdk/cmdline-tools/latest/`.
+- Installs `platform-tools`, `platforms;android-34`, and `build-tools;34.0.0` via `sdkmanager`.
+- Prints the exports you should add to your shell profile (`ANDROID_HOME`, `ANDROID_SDK_ROOT`, and PATH entries).
+
+If you prefer manual steps, follow the same outline above (download the CLI tools, install the three SDK packages with `sdkmanager`, and set the environment variables). Optional: `brew install android-platform-tools` if you want `adb` for installing the APK on a device/emulator.
 
 ## One-command build
 From the repository root after the prerequisites:
